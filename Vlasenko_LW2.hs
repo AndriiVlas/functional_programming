@@ -42,24 +42,23 @@ applyAll :: [a -> a] -> a -> a
 applyAll [] x = x
 applyAll (f:fs) x = applyAll fs (f x)
 
+
 binarySearch :: Ord a => [a] -> a -> Maybe Int
-binarySearch xs a = go 0 (length xs - 1)
+binarySearch list target = go 0 (length list - 1)
   where
-    go min max
-      | min > max = Nothing
-      | otherwise =
-          let 
-            mid = min + (max - min) `div` 2
-            midVal = xs !! mid
-          in 
-            case compare midVal a of
-              EQ -> Just mid
-              GT -> go min (mid - 1)
-              LT -> go (mid + 1) max
+    go low high
+        | low > high = Nothing
+        | midVal == target = Just mid
+        | midVal < target = go (mid + 1) high
+        | otherwise = go low (mid - 1)
+      where
+        mid = low + (high - low) `div` 2
+        midVal = list !! mid
+
 
 quickSort :: Ord a => [a] -> [a]
 quickSort [] = []
-quickSort (x:xs) = quickSort [y | y <- xs, y < x] ++ (x : [m |  m <- xs, m == x]) ++ quickSort [z | z <- xs, z > x]
+quickSort (x:xs) = quickSort [y | y <- xs, y < x] ++ (x : [m | m <- xs, m == x]) ++ quickSort [z | z <- xs, z > x]
 
 type Peg = String
 type Move = (Peg,Peg)
@@ -68,3 +67,20 @@ hanoi n a c b -- a - початок, c - кінець, b - допоміжний
     | n > 0 = hanoi (n - 1) a b c ++ [(a, c)] ++ hanoi (n - 1) b c a
     | n == 1 = [(a, c)]
     | otherwise = []
+
+main :: IO()
+main = do
+    print (safeHead [1,2,3])
+    print (safeDiv 5 2)
+    print (double 3)
+    print (mkMultiplier 2 3)
+    print (applyTwice (*2) 5)
+    print (myMap (*2) [1,2,3])
+    print (myFilter (>3) [1..10])
+    print (avg [1,2,3,4])
+    print (processList [1..10])
+    print (findIndex 3 [1..10])
+    print (applyAll[negate,(*2)](-1))
+    print (binarySearch [1..10] 7)
+    print (quickSort [6,7,3,4,6,6,7,3])
+    print (hanoi 2 "A" "C" "B")
