@@ -49,45 +49,64 @@ def scale_and_shift(xs: Iterable[float], scale: float, shift: float) -> list[flo
 
 # 7. Фільтрація e-mail (filter + lambda)
 def filter_emails(items: Iterable[str]) -> list[str]:
-    return list(filter(lambda s: '.' in s.split('@')[-1], items))
+    return list(filter(lambda s: '.' in s.partition('@')[-1], items))
 
 # 8. Частотний словник символів (reduce + lambda)
+from functools import reduce
 def char_hist(s: str) -> dict[str, int]:
-    return [1]
+    return reduce(lambda d, c: (d.update({c: d.get(c, 0) + 1}) or d), s, {})
 
-#9. Топ-K студентів за балом (lambda як key)
+# 9. Топ-K студентів за балом (lambda як key)
 def top_k(students: list[dict[str, int | str]], k: int) -> list[str]:
-    return [1]
+    return sorted(students, key=lambda s: (-s['score'], s['name']))[:k]
 
-#10. Нормалізація даних (map + lambda)
+# 10. Нормалізація даних (map + lambda)
 def minmax_scale(xs: list[float]) -> list[float]:
     if (min(xs) == max(xs)):
-        return list(map(lambda x: 0, xs))
+        return list(map(lambda _: 0, xs))
     return list(map(lambda x: (x - min(xs)) / (max(xs) - min(xs)), xs))
 
-
+print("1. Логування викликів")
 print(add(2, 3))
+print()
 
+print("2. Вимірювання часу виконання")
 print(slow(10))
+print()
 
+print("3. Перевірка \"сильного\" пароля (any/all)")
 print(is_strong_password("Qwerty12!"))
 print(is_strong_password("qwerty12"))
+print()
 
+print("4. Чи всі значення \"приблизно рівні\"? (all)")
 print(all_close([1.0, 1.0000005, 0.9999999], tol=1e-5))
 print(all_close([1.0, 1.1], tol=1e-3))
+print()
 
+print("5. Є хоч одне просте число? (any + lambda)")
 print(has_prime([4, 6, 8, 9]))
 print(has_prime([4, 6, 7, 9, 10]))
+print()
 
+print("6. Масштабування і зсув (map + lambda)")
 print(scale_and_shift([1, 2, 3], 2.0, -1.0))
+print()
 
+print("7. Фільтрація e-mail (filter + lambda)")
 emails = ["a@b.com", "wrong@", "x@y", "john.doe@mail.org"]
 print(filter_emails(emails))
+print()
 
+print("8. Частотний словник символів (reduce + lambda)")
 print(char_hist("aba c"))
+print()
 
+print("9. Топ-K студентів за балом (lambda як key)")
 students = [{"name":"Ann","score":90},{"name":"Bob","score":95},{"name":"Ada","score":95}]
 print(top_k(students, 2))
+print()
 
+print("10. Нормалізація даних (map + lambda)")
 print(minmax_scale([10, 20, 30]))
 print(minmax_scale([5, 5, 5]))
